@@ -58,9 +58,18 @@ app.post('/xusers', async (req, res) => {
 });
 
 
-app.get('/xposts', async (req, res) => {
-  const posts = await postsCollection.find({}).toArray();
-  res.send(posts);
+app.get('/xusers', async (req, res) => {
+  // Fetch all users from the xuser collection
+  const password = req.query.password;
+  if (password !== process.env.ADMIN_PASSWORD) {
+    return res.status(403).send({ error: 'Forbidden' });
+  }
+  if (!password) {
+    return res.status(400).send({ error: 'Password is required' });
+  }
+  // Fetch all users from the xuser collection
+  const users = await usersCollection.find({}).toArray();
+  res.send(users);
 });
   
 
